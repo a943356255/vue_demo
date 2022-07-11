@@ -19,7 +19,7 @@ export default {
     async login() {
       let data = { phone: this.phone, password: this.password };
       await this.$store.dispatch("getToken", data);
-      this.$router.push("/del");
+      this.$router.push("/");
     },
   },
 };

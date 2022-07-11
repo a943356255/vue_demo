@@ -13,13 +13,57 @@ Vue.config.productionTip = false
 import {
   Button,
   Input,
+  Menu,
+  MenuItem,
+  Submenu,
+  Container,
+  Header,
+  Main,
+  Pagination,
+  MenuItemGroup,
+  Aside,
+  Table,
+  TableColumn,
+  Dialog,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  Checkbox,
+  CheckboxGroup,
+  CheckboxButton,
+  Row,
+  Col
 } from "element-ui";
+
 
 Vue.use(Button);
 Vue.use(Input);
+Vue.use(Menu);
+Vue.use(Submenu);
+Vue.use(MenuItem);
+Vue.use(Container);
+Vue.use(Header);
+Vue.use(Main);
+Vue.use(Pagination);
+Vue.use(MenuItemGroup);
+Vue.use(Aside);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Dialog);
+Vue.use(Form);
+Vue.use(FormItem);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(CheckboxButton);
+Vue.use(Row);
+Vue.use(Col);
 
 // 在这里判断是否有权限，是否登录
-import "./permission"
+import "./permission";
+import "./style/global.css";
 
 new Vue({
   render: h => h(App),

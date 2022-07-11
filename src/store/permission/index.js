@@ -32,7 +32,7 @@ const permission = {
     actions: {
         async GenerateRoutes({ commit }, data) {
             // roles应该是请求到的用户拥有的权限
-            const roles = data.role;
+            const roles = data.roles;
             // 过滤完成后返回一个存有用户可以访问的路由数组
             const accessedRouters = asyncRouterMap.filter(v => {
                 // 是admin，放行

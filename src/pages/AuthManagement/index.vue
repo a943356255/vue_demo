@@ -1,12 +1,10 @@
 <template>
-  <div>
-    <el-button>用户管理</el-button>
-  </div>
+  <el-button>权限管理</el-button>
 </template>
 
 <script>
 export default {
-  name: "Del",
+  name: "AuthManagement",
 };
 </script>
 

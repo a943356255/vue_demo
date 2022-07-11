@@ -1,12 +1,12 @@
 <template>
   <div>
-    <el-button>添加</el-button>
+    <el-button>角色管理</el-button>
   </div>
 </template>
 
 <script>
 export default {
-  name: "Add",
+  name: "RoleManagement",
 };
 </script>
 

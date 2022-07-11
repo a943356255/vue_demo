@@ -3,7 +3,6 @@ import Login from "../pages/LoginAndRegister/Login.vue"
 import Home from "../pages/Home"
 import Del from "../pages/Del"
 import Add from "../pages/Add"
-import Register from "../pages/LoginAndRegister/Register.vue"
 
 // 保存VueRouter原来的push
 let originPush = VueRouter.prototype.push
@@ -37,11 +36,6 @@ export const constantRouterMap = [
         path: "/login",
         name: "login",
         component: Login
-    },
-    {
-        path: "/register",
-        name: "register",
-        component: Register
     },
     // 首页是否可以直接访问根据情况
     {

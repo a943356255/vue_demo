@@ -4,12 +4,14 @@ import { reqGetInfo, reqLogin } from "../../api/index"
 const state = {
     token: "",
     roles: "",
+    pathList: [],
 }
 
 // 将处理好的数据提交给state
 const mutations = {
-    GETINFO(state, roles) {
-        state.roles = roles;
+    GETINFO(state, data) {
+        state.roles = data.roles;
+        state.pathList = data.pathList;
     },
     GETTOKEN(state, data) {
         state.token = data.token;
@@ -20,7 +22,8 @@ const mutations = {
 const actions = {
     async getInfo({ commit }, token) {
         let result = await reqGetInfo(token);
-        commit("GETINFO", result.data.role);
+        commit("GETINFO", result.data);
+        console.log(result.data);
         return result.data;
     },
     async getToken({ commit }, data) {
