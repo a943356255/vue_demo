@@ -1,8 +1,10 @@
 import VueRouter from "vue-router"
 import Login from "../pages/LoginAndRegister/Login.vue"
 import Home from "../pages/Home"
-import Del from "../pages/Del"
 import Add from "../pages/Add"
+import AuthManagement from "../pages/AuthManagement"
+import GoodsManagement from "../pages/GoodsManagement"
+import UserManagement from "../pages/UserManagement"
 
 // 保存VueRouter原来的push
 let originPush = VueRouter.prototype.push
@@ -47,21 +49,39 @@ export const constantRouterMap = [
 
 export const asyncRouterMap = [
     {
-        path: "/del",
-        component: Del,
-        name: "del",
-        meta: {
-            // 超级管理员可以删除数据
-            role: ["admin", "super_editor"]
-        }
-    },
-    {
-        path: "/add",
-        name: "add",
+        path: "/role_management",
+        name: "role_management",
         component: Add,
         meta: {
             // 普通管理员只能添加数据
+            role: ["admin"]
+        }
+    },
+    {
+        path: "/auth_management",
+        name: "auth_management",
+        component: AuthManagement,
+        meta: {
+            // 普通管理员只能添加数据
+            role: ["admin"]
+        }
+    },
+    {
+        path: "/goods_management",
+        name: "goods_management",
+        component: GoodsManagement,
+        meta: {
+            // 普通管理员只能添加数据
             role: ["admin", "normal_editor"]
+        }
+    },
+    {
+        path: "/user_management",
+        name: "user_management",
+        component: UserManagement,
+        meta: {
+            // 普通管理员只能添加数据
+            role: ["admin"]
         }
     }
 ]

@@ -1,4 +1,4 @@
-import { asyncRouterMap, constantRouterMap } from "@/router/routes";
+import { asyncRouterMap, constantRouterMap } from "@/router/index";
 
 // roles是用户所拥有的权限，route是路由，meta属性包含了能访问它的权限
 function hasPermission(roles, route) {

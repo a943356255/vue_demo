@@ -18,6 +18,7 @@ router.beforeEach((to, from, next) => {
                 next();
             } else {
                 store.dispatch("getInfo", store.state.demo.token).then(roles => {
+                    console.log(roles);
                     // 生成可访问的路由表
                     store.dispatch("GenerateRoutes", roles).then(() => {
                         // 动态添加路由表
