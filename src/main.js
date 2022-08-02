@@ -33,9 +33,11 @@ import {
   CheckboxGroup,
   CheckboxButton,
   Row,
-  Col
+  Col,
+  Breadcrumb,
+  BreadcrumbItem,
+  Tag
 } from "element-ui";
-
 
 Vue.use(Button);
 Vue.use(Input);
@@ -60,13 +62,22 @@ Vue.use(CheckboxGroup);
 Vue.use(CheckboxButton);
 Vue.use(Row);
 Vue.use(Col);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);
+Vue.use(Tag);
 
 // 在这里判断是否有权限，是否登录
 import "./permission";
 import "./style/global.css";
+import MyTable from "@/components/MyTable";
+
+Vue.component(MyTable.name, MyTable);
 
 new Vue({
   render: h => h(App),
   router: router,
-  store
+  store,
+  beforeCreate() {
+    Vue.prototype.$bus = this
+  },
 }).$mount('#app')

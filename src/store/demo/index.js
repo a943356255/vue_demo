@@ -28,7 +28,7 @@ const actions = {
     },
     async getToken({ commit }, data) {
         let result = await reqLogin(data);
-        commit("GETTOKEN", result.data);
+        commit("GETTOKEN", result.data.data);
     }
 }
 

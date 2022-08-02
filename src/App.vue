@@ -1,15 +1,13 @@
 <template>
-  <Home></Home>
+  <router-view />
 </template>
 
 <script>
-import Home from "./pages/Home";
-
 export default {
   name: "App",
-  components: { Home },
 };
 </script>
 
 <style>
+@import '~nprogress/nprogress.css';
 </style>

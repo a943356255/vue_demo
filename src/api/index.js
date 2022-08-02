@@ -4,7 +4,7 @@ export const reqGetInfo = (token) => {
     return requests({
         url: "api/user/getInfo",
         method: "POST",
-        params: {
+        data: {
             token: token
         }
     })

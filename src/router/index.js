@@ -5,6 +5,7 @@ import Add from "../pages/Add"
 import AuthManagement from "../pages/AuthManagement"
 import GoodsManagement from "../pages/GoodsManagement"
 import UserManagement from "../pages/UserManagement"
+import ControllerManagement from "@/pages/ControllerManagement";
 
 // 保存VueRouter原来的push
 let originPush = VueRouter.prototype.push
@@ -43,8 +44,11 @@ export const constantRouterMap = [
     {
         path: "/home",
         name: "home",
-        component: Home
-    }
+        component: Home,
+        children: [
+
+        ]
+    },
 ]
 
 export const asyncRouterMap = [
@@ -81,6 +85,14 @@ export const asyncRouterMap = [
         component: UserManagement,
         meta: {
             // 普通管理员只能添加数据
+            role: ["admin"]
+        }
+    },
+    {
+        path: "/controller_management",
+        name: "controller_management",
+        component: ControllerManagement,
+        meta: {
             role: ["admin"]
         }
     }

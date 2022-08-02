@@ -4,7 +4,7 @@ import store from "./store/index"
 router.beforeEach((to, from, next) => {
 
     // 用于跳出循环
-    if (to.meta == null || to.meta.length == undefined) {
+    if (to.meta == null || to.meta.length === undefined) {
         next();
     }
 
@@ -18,15 +18,21 @@ router.beforeEach((to, from, next) => {
                 next();
             } else {
                 store.dispatch("getInfo", store.state.demo.token).then(roles => {
-                    console.log(roles);
                     // 生成可访问的路由表
                     store.dispatch("GenerateRoutes", roles).then(() => {
                         // 动态添加路由表
                         console.log("addRouters = ", store.state.permission.addRouters);
                         const arr = store.state.permission.addRouters;
                         // addRoute方法一次只能添加一个路由,所以要遍历
+                        console.log(router)
                         for (let i = 0; i < arr.length; i++) {
-                            router.addRoute(arr[i]);
+                            // 添加到home的子路由
+                            router.options.routes[1].children.push(arr[i])
+                            // router.addRoute(arr[i]);
+                        }
+                        // 重新挂载路由
+                        for (let i = 0; i < router.options.routes.length; i++) {
+                            router.addRoute(router.options.routes[i]);
                         }
                         // router.addRoute(store.state.permission.addRouters);
                         next({ ...to, replace: true });

@@ -7,6 +7,7 @@
 </template>
 
 <script>
+// import store from "@/store";
 export default {
   name: "Login",
   data() {
@@ -19,7 +20,7 @@ export default {
     async login() {
       let data = { phone: this.phone, password: this.password };
       await this.$store.dispatch("getToken", data);
-      this.$router.push("/");
+      await this.$router.push("/home");
     },
   },
 };
