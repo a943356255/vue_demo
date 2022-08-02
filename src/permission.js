@@ -1,17 +1,24 @@
 import router from "./router/index"
 import store from "./store/index"
+import NProgress from 'nprogress' // progress bar
+import 'nprogress/nprogress.css' // progress bar style
+
+NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
 
     // 用于跳出循环
-    if (to.meta == null || to.meta.length === undefined) {
-        next();
-    }
+    // if (to.meta == null || to.meta.length === undefined) {
+    //     next()
+    // }
+
+    console.log("to = ", to, "from = ", from, "next = ", next())
+    NProgress.start()
 
     // 判断是否携带token
     if (store.state.demo.token) {
         if (to.path === "/login") {
-            next({ path: "/" })
+            next({ path: "/home" })
         } else {
             const hasRoles = store.state.demo.roles && store.state.demo.roles.length > 0;
             if (hasRoles) {
@@ -39,11 +46,18 @@ router.beforeEach((to, from, next) => {
                     })
                 }).catch(err => {
                     console.log(err);
+                    NProgress.done()
                 })
             }
         }
     } else {
         // 没有token
         next({ path: "/login" })
+        NProgress.done()
     }
+})
+
+router.afterEach(() => {
+    // finish progress bar
+    NProgress.done()
 })

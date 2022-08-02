@@ -1,11 +1,6 @@
 import VueRouter from "vue-router"
-import Login from "../pages/LoginAndRegister/Login.vue"
-import Home from "../pages/Home"
-import Add from "../pages/Add"
-import AuthManagement from "../pages/AuthManagement"
-import GoodsManagement from "../pages/GoodsManagement"
-import UserManagement from "../pages/UserManagement"
-import ControllerManagement from "@/pages/ControllerManagement";
+
+import Login from "@/pages/LoginAndRegister/Login";
 
 // 保存VueRouter原来的push
 let originPush = VueRouter.prototype.push
@@ -39,12 +34,13 @@ export const constantRouterMap = [
         path: "/login",
         name: "login",
         component: Login
+            // () => import("../pages/LoginAndRegister/Login")
     },
     // 首页是否可以直接访问根据情况
     {
         path: "/home",
         name: "home",
-        component: Home,
+        component: () => import("../pages/Home/index"),
         children: [
 
         ]
@@ -55,7 +51,7 @@ export const asyncRouterMap = [
     {
         path: "/role_management",
         name: "role_management",
-        component: Add,
+        component: () => import("../pages/Add/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin"]
@@ -64,7 +60,7 @@ export const asyncRouterMap = [
     {
         path: "/auth_management",
         name: "auth_management",
-        component: AuthManagement,
+        component: () => import("../pages/AuthManagement/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin"]
@@ -73,7 +69,7 @@ export const asyncRouterMap = [
     {
         path: "/goods_management",
         name: "goods_management",
-        component: GoodsManagement,
+        component: () => import("../pages/GoodsManagement/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin", "normal_editor"]
@@ -82,7 +78,7 @@ export const asyncRouterMap = [
     {
         path: "/user_management",
         name: "user_management",
-        component: UserManagement,
+        component: () => import("../pages/UserManagement/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin"]
@@ -91,7 +87,7 @@ export const asyncRouterMap = [
     {
         path: "/controller_management",
         name: "controller_management",
-        component: ControllerManagement,
+        component: () => import("../pages/ControllerManagement"),
         meta: {
             role: ["admin"]
         }

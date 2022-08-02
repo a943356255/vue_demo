@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="margin-bottom: 10px">
+    <div class="top-class">
       <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery"/>
-      <el-button @click="searchValue" style="margin-left: 10px">搜索</el-button>
+      <el-button @click="searchValue" style="margin-left: 10px" type="primary">搜索</el-button>
     </div>
 
     <!-- table表单 -->
@@ -301,6 +301,9 @@ export default {
 </script>
 
 <style scoped>
+.top-class {
+  margin-bottom: 10px;
+}
 .el-dropdown-link {
   cursor: pointer;
   color: #409eff;

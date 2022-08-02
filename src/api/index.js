@@ -20,3 +20,10 @@ export const reqLogin = (value) => {
         }
     })
 }
+
+export function reqGetRole() {
+    return requests({
+        url: "api/user/getRole",
+        method: "POST",
+    })
+}

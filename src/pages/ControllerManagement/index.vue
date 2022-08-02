@@ -1,12 +1,13 @@
 <template>
   <div>
+    <el-button class="button-class" type="primary" @click="addNewController">添加</el-button>
     <MyTable
         :columns="this.columns"
         :table="this.table"
         :conditions="this.conditions"
         :columnsName="this.columnsName"
         v-slot="value">
-      <el-button size="small" @click.native="change(value.index)"
+      <el-button size="small" @click.native="change(value.index)" type="primary"
       >编辑
       </el-button
       >
@@ -20,6 +21,8 @@
 </template>
 
 <script>
+
+import {reqGetRole} from "@/api";
 
 export default {
   name: "ControllerManagement",
@@ -39,6 +42,7 @@ export default {
         url_name: "具体接口",
       },
       table: "url_menu",
+      roles: []
     };
   },
   methods: {
@@ -51,11 +55,17 @@ export default {
     add() {
       this.$bus.$emit("add");
     },
+    addNewController() {
+
+    }
   }
 
 }
 </script>
 
 <style scoped>
-
+.button-class {
+  margin-right: 50px;
+  float: right
+}
 </style>
