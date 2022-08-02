@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div style="margin-bottom: 10px">
+      <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery"/>
+      <el-button @click="searchValue" style="margin-left: 10px">搜索</el-button>
+    </div>
+
+    <!-- table表单 -->
     <el-table
       :data="this.tableList"
       :columnsName="this.columnsName"
@@ -28,6 +34,7 @@
       </el-table-column>
     </el-table>
 
+    <!-- 对话框 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="dialogList" :columnsName="this.columnsName">
         <el-form-item
@@ -43,7 +50,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="sumbit">确 定</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -97,12 +104,13 @@
 <script>
 import Vue from "vue";
 import requests from "../../src/api/requests";
-import { MessageBox } from "element-ui";
-import { Message } from "element-ui";
+import {Message, MessageBox} from "element-ui";
 
 export default {
   name: "MyTable",
+
   props: ["table", "columns", "columnsName", "conditions"],
+
   data() {
     return {
       tableList: [],
@@ -136,11 +144,13 @@ export default {
         },
       ],
       title: "",
+      searchQuery: ""
     };
   },
+
   methods: {
     getParameter(operate) {
-      let map = {
+      return {
         operate: operate,
         table: this.table,
         column: this.columns,
@@ -148,8 +158,8 @@ export default {
         pageSize: this.pageSize,
         pageNo: this.pageNo,
       };
-      return map;
     },
+
     // 请求方法
     apiRequest(data) {
       return requests({
@@ -162,9 +172,11 @@ export default {
           pageNo: data.pageNo,
           column: data.column,
           condition: data.condition,
+          like: data.like
         },
       });
     },
+
     edit(index) {
       this.title = "修改表格信息";
       this.dialogFormVisible = true;
@@ -172,6 +184,7 @@ export default {
         Vue.set(this.dialogList, i, this.tableList[index][i]);
       }
     },
+
     del(index) {
       MessageBox.confirm("此操作将永久删除该文件, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -205,7 +218,8 @@ export default {
           });
         });
     },
-    async sumbit() {
+
+    async submit() {
       this.dialogFormVisible = false;
       let map = this.getParameter("update");
       map.column = this.dialogList;
@@ -227,23 +241,43 @@ export default {
       let result = await this.apiRequest(map);
       this.tableList = result.data.valueList;
     },
+
     async changeSize() {
       let map = this.getParameter("select");
       let result = await this.apiRequest(map);
       this.tableList = result.data.valueList;
     },
+
     async handleCurrentChange(currentPage) {
       this.pageNo = currentPage;
       let map = this.getParameter("select");
       let result = await this.apiRequest(map);
       this.tableList = result.data.valueList;
     },
+
     add() {
       this.title = "添加信息";
       this.dialogList = {};
       this.dialogFormVisible = true;
     },
+
+    async searchValue() {
+      let map = this.getParameter("select")
+      let like = {}
+
+      for (let i in this.columns) {
+        console.log(i)
+        if (i !== 'id') {
+          Vue.set(like, i, this.searchQuery)
+        }
+      }
+
+      map["like"] = like
+      let result = await this.apiRequest(map)
+      this.tableList = result.data.valueList;
+    }
   },
+
   watch: {
     table: {
       immediate: true,
@@ -254,12 +288,10 @@ export default {
         let result = await this.apiRequest(map);
         this.tableList = result.data.valueList;
         this.dataSize = result.data.size;
-        console.log(this.tableList);
-        console.log(result.data);
-        console.log(this.dataSize);
       },
     },
   },
+
   mounted() {
     this.$bus.$on("edit", this.edit);
     this.$bus.$on("del", this.del);
