@@ -1,7 +1,7 @@
 import router from "./router/index"
 import store from "./store/index"
 import NProgress from 'nprogress' // progress bar
-import 'nprogress/nprogress.css' // progress bar style
+import 'nprogress/nprogress.css'
 
 NProgress.configure({ showSpinner: false })
 
@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
     //     next()
     // }
 
-    console.log("to = ", to, "from = ", from, "next = ", next())
+    console.log("to=", to, "from=", from, "next = ", next())
     NProgress.start()
 
     // 判断是否携带token
@@ -22,7 +22,9 @@ router.beforeEach((to, from, next) => {
         } else {
             const hasRoles = store.state.demo.roles && store.state.demo.roles.length > 0;
             if (hasRoles) {
-                next();
+                console.log("进入next")
+                next()
+                NProgress.done()
             } else {
                 store.dispatch("getInfo", store.state.demo.token).then(roles => {
                     // 生成可访问的路由表
@@ -59,5 +61,6 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
     // finish progress bar
+    console.log("进入afterEach", new Date())
     NProgress.done()
 })

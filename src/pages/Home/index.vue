@@ -71,9 +71,7 @@
 
       <!-- 主题内容 -->
       <el-main>
-        <keep-alive>
-          <router-view :key="key"></router-view>
-        </keep-alive>
+          <router-view :key="key" />
       </el-main>
 
     </el-container>
@@ -111,7 +109,6 @@ export default {
           : this.$route + +new Date()
     },
     ...mapState(["permission", "demo"]),
-
   },
 
   methods: {

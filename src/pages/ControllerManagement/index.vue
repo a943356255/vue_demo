@@ -55,8 +55,9 @@ export default {
     add() {
       this.$bus.$emit("add");
     },
-    addNewController() {
-
+    async addNewController() {
+      let result = await reqGetRole();
+      this.roles = result.data.roles
     }
   }
 

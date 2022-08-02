@@ -54,7 +54,7 @@ export const asyncRouterMap = [
         component: () => import("../pages/Add/index"),
         meta: {
             // 普通管理员只能添加数据
-            role: ["admin"]
+            role: ["admin"],
         }
     },
     {
@@ -63,7 +63,7 @@ export const asyncRouterMap = [
         component: () => import("../pages/AuthManagement/index"),
         meta: {
             // 普通管理员只能添加数据
-            role: ["admin"]
+            role: ["admin"],
         }
     },
     {
@@ -72,7 +72,7 @@ export const asyncRouterMap = [
         component: () => import("../pages/GoodsManagement/index"),
         meta: {
             // 普通管理员只能添加数据
-            role: ["admin", "normal_editor"]
+            role: ["admin", "normal_editor"],
         }
     },
     {
@@ -81,7 +81,7 @@ export const asyncRouterMap = [
         component: () => import("../pages/UserManagement/index"),
         meta: {
             // 普通管理员只能添加数据
-            role: ["admin"]
+            role: ["admin"],
         }
     },
     {
@@ -89,7 +89,7 @@ export const asyncRouterMap = [
         name: "controller_management",
         component: () => import("../pages/ControllerManagement"),
         meta: {
-            role: ["admin"]
+            role: ["admin"],
         }
     }
 ]
