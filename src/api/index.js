@@ -23,7 +23,18 @@ export const reqLogin = (value) => {
 
 export function reqGetRole() {
     return requests({
-        url: "api/user/getRole",
+        url: "api/user/getRoles",
         method: "POST",
+    })
+}
+
+export const reqInsertController = (data) => {
+    return requests({
+        url: "api/user/insertController",
+        method: "POST",
+        data: {
+            checkedRoles: data.checkedRoles,
+            controller: data.controller
+        }
     })
 }
