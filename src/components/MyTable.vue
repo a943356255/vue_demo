@@ -150,14 +150,27 @@ export default {
 
   methods: {
     getParameter(operate) {
-      return {
+      let map = {
         operate: operate,
         table: this.table,
         column: this.columns,
         condition: this.conditions,
         pageSize: this.pageSize,
         pageNo: this.pageNo,
-      };
+      }
+
+      // 封装搜索信息
+      if (this.searchQuery !== "" && this.searchQuery !== undefined) {
+        let like = {}
+        for (let i in this.columns) {
+          if (i !== 'id') {
+            Vue.set(like, i, this.searchQuery)
+          }
+        }
+        map["like"] = like
+      }
+
+      return map
     },
 
     // 请求方法
@@ -204,11 +217,12 @@ export default {
               type: "success",
               message: "删除成功!",
             });
-            map.condition = null;
-            map.operate = "select";
-            this.apiRequest(map).then((res) => {
-              this.tableList = res.data.valueList;
-            });
+
+            let num = this.dataSize % this.pageSize
+            if (this.pageNo === (Math.floor(this.dataSize / this.pageSize) + 1) && num === 1) {
+              this.pageNo -= 1
+            }
+            this.fresh()
           });
         })
         .catch(() => {
@@ -239,20 +253,20 @@ export default {
       }
       // 发请求获取更改后的数据;
       let result = await this.apiRequest(map);
-      this.tableList = result.data.valueList;
+      this.setData(result)
     },
 
     async changeSize() {
       let map = this.getParameter("select");
       let result = await this.apiRequest(map);
-      this.tableList = result.data.valueList;
+      this.setData(result)
     },
 
     async handleCurrentChange(currentPage) {
       this.pageNo = currentPage;
       let map = this.getParameter("select");
       let result = await this.apiRequest(map);
-      this.tableList = result.data.valueList;
+      this.setData(result)
     },
 
     add() {
@@ -263,17 +277,19 @@ export default {
 
     async searchValue() {
       let map = this.getParameter("select")
-      let like = {}
 
-      for (let i in this.columns) {
-        console.log(i)
-        if (i !== 'id') {
-          Vue.set(like, i, this.searchQuery)
-        }
-      }
-
-      map["like"] = like
       let result = await this.apiRequest(map)
+      this.setData(result)
+    },
+
+    // 刷新数据
+    async fresh() {
+      let map = this.getParameter("select")
+      let result = await this.apiRequest(map)
+      this.setData(result)
+    },
+
+    setData(result) {
       this.tableList = result.data.valueList;
       this.dataSize = result.data.size
     }
@@ -284,19 +300,27 @@ export default {
       immediate: true,
       deep: true,
       async handler(newVal, oldVal) {
-        console.log("获得数据");
         let map = this.getParameter("select");
         let result = await this.apiRequest(map);
         this.tableList = result.data.valueList;
         this.dataSize = result.data.size;
       },
     },
+
+    searchQuery: {
+      handler(newValue) {
+        if (newValue === "" || newValue === undefined) {
+
+        }
+      }
+    }
   },
 
   mounted() {
     this.$bus.$on("edit", this.edit);
     this.$bus.$on("del", this.del);
     this.$bus.$on("add", this.add);
+    this.$bus.$on("fresh", this.fresh)
   },
 };
 </script>
