@@ -275,6 +275,7 @@ export default {
       map["like"] = like
       let result = await this.apiRequest(map)
       this.tableList = result.data.valueList;
+      this.dataSize = result.data.size
     }
   },
 
