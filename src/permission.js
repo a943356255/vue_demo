@@ -11,8 +11,7 @@ router.beforeEach((to, from, next) => {
     // if (to.meta == null || to.meta.length === undefined) {
     //     next()
     // }
-
-    console.log("to=", to, "from=", from, "next = ", next())
+    next()
     NProgress.start()
 
     // 判断是否携带token
@@ -22,7 +21,6 @@ router.beforeEach((to, from, next) => {
         } else {
             const hasRoles = store.state.demo.roles && store.state.demo.roles.length > 0;
             if (hasRoles) {
-                console.log("进入next")
                 next()
                 NProgress.done()
             } else {
@@ -61,6 +59,5 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
     // finish progress bar
-    console.log("进入afterEach", new Date())
     NProgress.done()
 })
