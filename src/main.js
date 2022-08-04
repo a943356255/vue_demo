@@ -36,7 +36,10 @@ import {
   Col,
   Breadcrumb,
   BreadcrumbItem,
-  Tag
+  Tag,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
 } from "element-ui";
 
 Vue.use(Button);
@@ -65,6 +68,9 @@ Vue.use(Col);
 Vue.use(Breadcrumb);
 Vue.use(BreadcrumbItem);
 Vue.use(Tag);
+Vue.use(DropdownMenu);
+Vue.use(DropdownItem);
+Vue.use(Dropdown)
 
 // 在这里判断是否有权限，是否登录
 import "./permission";

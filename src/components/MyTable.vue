@@ -1,30 +1,45 @@
 <template>
   <div>
     <div class="top-class">
-      <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery"/>
+      <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery" @blur="changeToNormal"/>
+      <el-select v-model="selectValue" placeholder="选择搜索条件，默认匹配所有项" class="dropdown-class" @change="selectChange()">
+        <el-option
+            key="all"
+            label="匹配所有"
+            value=""
+        >
+        </el-option>
+        <el-option
+            v-for="(item, key) in this.columnsName"
+            :key="item"
+            :label="item"
+            :value="key"
+        >
+        </el-option>
+      </el-select>
       <el-button @click="searchValue" style="margin-left: 10px" type="primary" icon="el-icon-search">搜索</el-button>
     </div>
 
     <!-- table表单 -->
     <el-table
-      :data="this.tableList"
-      :columnsName="this.columnsName"
-      border
-      style="width: 100%"
+        :data="this.tableList"
+        :columnsName="this.columnsName"
+        border
+        style="width: 100%"
     >
       <el-table-column
-        v-for="(obj, key, index) of this.tableList[0]"
-        :key="index"
+          v-for="(obj, key, index) of this.tableList[0]"
+          :key="index"
       >
-        <template slot="header"> {{ columnsName[key] }} </template>
-        <template slot-scope="scope">
+        <template slot="header"> {{ columnsName[key] }}</template>
+        <template v-slot="scope">
           {{ scope.row[key] }}
         </template>
 
       </el-table-column>
 
       <el-table-column label="操作">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <!-- scope.$index可以取该元素在数组中的下标 -->
           <!-- <el-button type="danger" size="small" @click="del(scope.$index)"
             >删除</el-button -->
@@ -38,11 +53,11 @@
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="dialogList" :columnsName="this.columnsName">
         <el-form-item
-          v-for="(obj, key, index) of this.tableList[0]"
-          :key="index + key"
-          :label="columnsName[key]"
-          :label-width="formLabelWidth"
-          v-show="key !== 'id'"
+            v-for="(obj, key, index) of this.tableList[0]"
+            :key="index + key"
+            :label="columnsName[key]"
+            :label-width="formLabelWidth"
+            v-show="key !== 'id'"
         >
           <el-input v-model="dialogList[key]" autocomplete="off"></el-input>
         </el-form-item>
@@ -64,16 +79,16 @@
             </div>
             <div class="inner-div" style="margin-top: 43px">
               <el-select
-                v-model="pageSize"
-                placeholder="1"
-                class="width"
-                @change="changeSize"
+                  v-model="pageSize"
+                  placeholder="1"
+                  class="width"
+                  @change="changeSize"
               >
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
                 >
                 </el-option>
               </el-select>
@@ -86,13 +101,13 @@
       <el-col :span="16">
         <div class="grid-content bg-purple">
           <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="dataSize"
-            style="margin-left: 500px; margin-top: 50px"
-            :page-size="pageSize"
-            @current-change="handleCurrentChange"
-            :current-page="pageNo"
+              background
+              layout="prev, pager, next"
+              :total="dataSize"
+              style="margin-left: 500px; margin-top: 50px"
+              :page-size="pageSize"
+              @current-change="handleCurrentChange"
+              :current-page="pageNo"
           >
           </el-pagination>
         </div>
@@ -144,7 +159,8 @@ export default {
         },
       ],
       title: "",
-      searchQuery: ""
+      searchQuery: "",
+      selectValue: ""
     };
   },
 
@@ -157,14 +173,19 @@ export default {
         condition: this.conditions,
         pageSize: this.pageSize,
         pageNo: this.pageNo,
+        selectValue: this.selectValue
       }
 
       // 封装搜索信息
       if (this.searchQuery !== "" && this.searchQuery !== undefined) {
         let like = {}
-        for (let i in this.columns) {
-          if (i !== 'id') {
-            Vue.set(like, i, this.searchQuery)
+        if (this.selectValue !== "" && this.selectValue !== undefined) {
+          Vue.set(like, this.selectValue, this.searchQuery)
+        } else {
+          for (let i in this.columns) {
+            if (i !== 'id') {
+              Vue.set(like, i, this.searchQuery)
+            }
           }
         }
         map["like"] = like
@@ -172,7 +193,6 @@ export default {
 
       return map
     },
-
     // 请求方法
     apiRequest(data) {
       return requests({
@@ -185,7 +205,8 @@ export default {
           pageNo: data.pageNo,
           column: data.column,
           condition: data.condition,
-          like: data.like
+          like: data.like,
+          searchValue: data.searchValue
         },
       });
     },
@@ -205,39 +226,39 @@ export default {
         type: "warning",
         center: true,
       })
-        .then(() => {
-          // 在这里发起请求删除数据
-          let map = this.getParameter("delete");
-          map.condition = {
-            id: this.tableList[index].id,
-          };
+          .then(() => {
+            // 在这里发起请求删除数据
+            let map = this.getParameter("delete");
+            map.condition = {
+              id: this.tableList[index].id,
+            };
 
-          this.apiRequest(map).then((res) => {
-            Message({
-              type: "success",
-              message: "删除成功!",
+            this.apiRequest(map).then((res) => {
+              Message({
+                type: "success",
+                message: "删除成功!",
+              });
+
+              let num = this.dataSize % this.pageSize
+              if (this.pageNo === (Math.floor(this.dataSize / this.pageSize) + 1) && num === 1) {
+                this.pageNo -= 1
+              }
+              this.fresh()
             });
-
-            let num = this.dataSize % this.pageSize
-            if (this.pageNo === (Math.floor(this.dataSize / this.pageSize) + 1) && num === 1) {
-              this.pageNo -= 1
-            }
-            this.fresh()
+          })
+          .catch(() => {
+            Message({
+              type: "info",
+              message: "已取消删除",
+            });
           });
-        })
-        .catch(() => {
-          Message({
-            type: "info",
-            message: "已取消删除",
-          });
-        });
     },
 
     async submit() {
       this.dialogFormVisible = false;
       let map = this.getParameter("update");
       map.column = this.dialogList;
-      map.condition = { id: this.dialogList.id };
+      map.condition = {id: this.dialogList.id};
 
       if (this.dialogList.id == null) {
         map.operate = "add";
@@ -277,7 +298,6 @@ export default {
 
     async searchValue() {
       let map = this.getParameter("select")
-
       let result = await this.apiRequest(map)
       this.setData(result)
     },
@@ -292,7 +312,12 @@ export default {
     setData(result) {
       this.tableList = result.data.valueList;
       this.dataSize = result.data.size
-    }
+    },
+
+    changeToNormal() {
+
+    },
+
   },
 
   watch: {
@@ -310,7 +335,7 @@ export default {
     searchQuery: {
       handler(newValue) {
         if (newValue === "" || newValue === undefined) {
-
+          this.fresh()
         }
       }
     }
@@ -324,26 +349,30 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+
 .top-class {
   margin-bottom: 10px;
 }
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409eff;
-}
+
 .el-icon-arrow-down {
   font-size: 12px;
 }
+
 .footer-div {
   width: 300px;
   margin-left: 40px;
+}
+.dropdown-class {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 250px;
 }
 .inner-div {
   float: left;
   height: 100%;
 }
+
 .width {
   width: 70px;
 }
