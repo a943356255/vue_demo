@@ -37,9 +37,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Tag,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
+  Upload,
+  Tooltip
 } from "element-ui";
 
 Vue.use(Button);
@@ -68,9 +67,8 @@ Vue.use(Col);
 Vue.use(Breadcrumb);
 Vue.use(BreadcrumbItem);
 Vue.use(Tag);
-Vue.use(DropdownMenu);
-Vue.use(DropdownItem);
-Vue.use(Dropdown)
+Vue.use(Upload);
+Vue.use(Tooltip);
 
 // 在这里判断是否有权限，是否登录
 import "./permission";

@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="top-class">
-      <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery" @blur="changeToNormal"/>
-      <el-select v-model="selectValue" placeholder="选择搜索条件，默认匹配所有项" class="dropdown-class" @change="selectChange()">
+      <el-input placeholder="请输入要搜索的内容" style="width: 300px" v-model="searchQuery"/>
+      <el-select v-model="selectValue" placeholder="选择搜索条件，默认匹配所有项" class="dropdown-class">
         <el-option
             key="all"
             label="匹配所有"
@@ -18,6 +18,11 @@
         </el-option>
       </el-select>
       <el-button @click="searchValue" style="margin-left: 10px" type="primary" icon="el-icon-search">搜索</el-button>
+
+      <el-button type="warning" @click="getExcel"
+      >导出为excel
+      </el-button
+      >
     </div>
 
     <!-- table表单 -->
@@ -121,6 +126,8 @@ import Vue from "vue";
 import requests from "../../src/api/requests";
 import {Message, MessageBox} from "element-ui";
 
+const { export_json_to_excel } = require("../excel/expor2Excel");
+
 export default {
   name: "MyTable",
 
@@ -160,7 +167,10 @@ export default {
       ],
       title: "",
       searchQuery: "",
-      selectValue: ""
+      selectValue: "",
+      // 导出excel相关的
+      fileListUpload: [],
+      limit: 1
     };
   },
 
@@ -314,10 +324,92 @@ export default {
       this.dataSize = result.data.size
     },
 
-    changeToNormal() {
+    // element-ui所需要的函数
+    // handleChange(file) {
+    //   //file.raw就是我们的导入函数需要的参数
+    //   this.fileTemp = file.raw;
+    //   if (this.fileTemp) {
+    //     if (
+    //         this.fileTemp.type ===
+    //         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    //         this.fileTemp.type === "application/vnd.ms-excel"
+    //     ) {
+    //       this.importFxx(this.fileTemp);
+    //     } else {
+    //       this.$message({
+    //         type: "warning",
+    //         message: "附件格式错误，请重新上传！",
+    //       });
+    //       this.handleRemove();
+    //     }
+    //   } else {
+    //     this.$message({
+    //       type: "warning",
+    //       message: "请上传附件！",
+    //     });
+    //   }
+    // },
+    // 导入函数
+    // importFxx(obj) {
+    //   // 通过DOM取文件数据
+    //   let rABS = false; //是否将文件读取为二进制字符串
+    //   let f = obj;
+    //   let reader = new FileReader();
+    //   const self = this;
+    //   FileReader.prototype.readAsBinaryString = function (f) {
+    //     let binary = "";
+    //     // var pt = this;
+    //     let wb; //读取完成的数据
+    //     let outData;
+    //     let reader = new FileReader();
+    //     reader.onload = function (e) {
+    //       console.log(e);
+    //       let bytes = new Uint8Array(reader.result);
+    //       let length = bytes.byteLength;
+    //       for (let i = 0; i < length; i++) {
+    //         binary += String.fromCharCode(bytes[i]);
+    //       }
+    //       let XLSX = require("xlsx");
+    //       wb = XLSX.read(binary, {
+    //         type: "binary",
+    //       });
+    //       // outData就是需要的那个数组
+    //       outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    //       self.excelData = [...outData];
+    //     };
+    //     reader.readAsArrayBuffer(f);
+    //   };
+    //   if (rABS) {
+    //     reader.readAsArrayBuffer(f);
+    //   } else {
+    //     reader.readAsBinaryString(f);
+    //   }
+    // },
 
+    //导出函数
+    getExcel() {
+      let arrData = this.columnsName
+
+      let keys = [], values = []
+
+      for (let i in arrData) {
+        keys.push(i)
+        values.push(arrData[i])
+      }
+      // 转换一下
+      values.reverse()
+
+      let data = []
+      for (let i = 0; i < this.tableList.length; i++) {
+        let part = []
+        for (let j in this.tableList[i]) {
+          part.push(this.tableList[i][j])
+        }
+        data.push(part)
+      }
+
+      export_json_to_excel(values, data, "excel表名");
     },
-
   },
 
   watch: {
@@ -363,11 +455,13 @@ export default {
   width: 300px;
   margin-left: 40px;
 }
+
 .dropdown-class {
   margin-left: 10px;
   margin-right: 10px;
   width: 250px;
 }
+
 .inner-div {
   float: left;
   height: 100%;
