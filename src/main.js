@@ -74,8 +74,10 @@ Vue.use(Tooltip);
 import "./permission";
 import "./style/global.css";
 import MyTable from "@/components/MyTable";
+import MyExcel from "@/components/MyExcel";
 
 Vue.component(MyTable.name, MyTable);
+Vue.component(MyExcel.name, MyExcel);
 
 new Vue({
   render: h => h(App),

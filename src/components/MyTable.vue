@@ -17,12 +17,50 @@
         >
         </el-option>
       </el-select>
+
       <el-button @click="searchValue" style="margin-left: 10px" type="primary" icon="el-icon-search">搜索</el-button>
 
-      <el-button type="warning" @click="getExcel"
-      >导出为excel
-      </el-button
-      >
+      <!-- 导出excel -->
+      <el-button type="warning" @click="dialogFormVisible1 = true">导出为excel</el-button>
+      <el-dialog title="导出格式" :visible.sync="dialogFormVisible1">
+        <el-form :columnsName="this.columnsName">
+          <el-form-item
+              label="文件名称："
+              :label-width="formLabelWidth"
+          >
+            <el-input v-model="excelName" autocomplete="off" placeholder="请输入导出excel的名称"/>
+          </el-form-item>
+          <el-form-item label="起始页："  :label-width="formLabelWidth">
+            <el-select v-model="beginPage" placeholder="请选择要导出数据的起始页">
+              <el-option
+                  v-for="val in Math.ceil(this.dataSize / this.pageSize)"
+                  :label="val"
+                  :value="val">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="尾页：" :label-width="formLabelWidth">
+            <el-select v-model="endPage" :placeholder="showMessage" >
+              <el-option
+                  v-for="val in Math.ceil(this.dataSize / this.pageSize)"
+                  v-show="val >= beginPage && beginPage !== ''"
+                  :label="val"
+                  :value="val">
+              </el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item :label-width="formLabelWidth">
+            <span>注：如果不进行选择或者选择不完整，则只打印当前页</span>
+          </el-form-item>
+        </el-form>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible1 = false">取 消</el-button>
+          <el-button type="primary" @click="getExcel">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
 
     <!-- table表单 -->
@@ -126,7 +164,7 @@ import Vue from "vue";
 import requests from "../../src/api/requests";
 import {Message, MessageBox} from "element-ui";
 
-const { export_json_to_excel } = require("../excel/expor2Excel");
+const {export_json_to_excel} = require("../excel/expor2Excel");
 
 export default {
   name: "MyTable",
@@ -137,6 +175,7 @@ export default {
     return {
       tableList: [],
       dialogFormVisible: false,
+      dialogFormVisible1: false,
       dialogList: {},
       formLabelWidth: "120px",
       isShow: true,
@@ -170,7 +209,11 @@ export default {
       selectValue: "",
       // 导出excel相关的
       fileListUpload: [],
-      limit: 1
+      limit: 1,
+      excelName: "",
+      beginPage: "",
+      endPage: "",
+      showMessage: "请先选择起始页"
     };
   },
 
@@ -200,7 +243,6 @@ export default {
         }
         map["like"] = like
       }
-
       return map
     },
     // 请求方法
@@ -216,7 +258,8 @@ export default {
           column: data.column,
           condition: data.condition,
           like: data.like,
-          searchValue: data.searchValue
+          searchValue: data.searchValue,
+          excelPageSize: data.excelPageSize
         },
       });
     },
@@ -324,91 +367,47 @@ export default {
       this.dataSize = result.data.size
     },
 
-    // element-ui所需要的函数
-    // handleChange(file) {
-    //   //file.raw就是我们的导入函数需要的参数
-    //   this.fileTemp = file.raw;
-    //   if (this.fileTemp) {
-    //     if (
-    //         this.fileTemp.type ===
-    //         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-    //         this.fileTemp.type === "application/vnd.ms-excel"
-    //     ) {
-    //       this.importFxx(this.fileTemp);
-    //     } else {
-    //       this.$message({
-    //         type: "warning",
-    //         message: "附件格式错误，请重新上传！",
-    //       });
-    //       this.handleRemove();
-    //     }
-    //   } else {
-    //     this.$message({
-    //       type: "warning",
-    //       message: "请上传附件！",
-    //     });
-    //   }
-    // },
-    // 导入函数
-    // importFxx(obj) {
-    //   // 通过DOM取文件数据
-    //   let rABS = false; //是否将文件读取为二进制字符串
-    //   let f = obj;
-    //   let reader = new FileReader();
-    //   const self = this;
-    //   FileReader.prototype.readAsBinaryString = function (f) {
-    //     let binary = "";
-    //     // var pt = this;
-    //     let wb; //读取完成的数据
-    //     let outData;
-    //     let reader = new FileReader();
-    //     reader.onload = function (e) {
-    //       console.log(e);
-    //       let bytes = new Uint8Array(reader.result);
-    //       let length = bytes.byteLength;
-    //       for (let i = 0; i < length; i++) {
-    //         binary += String.fromCharCode(bytes[i]);
-    //       }
-    //       let XLSX = require("xlsx");
-    //       wb = XLSX.read(binary, {
-    //         type: "binary",
-    //       });
-    //       // outData就是需要的那个数组
-    //       outData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-    //       self.excelData = [...outData];
-    //     };
-    //     reader.readAsArrayBuffer(f);
-    //   };
-    //   if (rABS) {
-    //     reader.readAsArrayBuffer(f);
-    //   } else {
-    //     reader.readAsBinaryString(f);
-    //   }
-    // },
-
-    //导出函数
-    getExcel() {
+    // 导出excel
+    async getExcel() {
       let arrData = this.columnsName
-
       let keys = [], values = []
 
       for (let i in arrData) {
         keys.push(i)
-        values.push(arrData[i])
+        values.unshift(arrData[i])
       }
-      // 转换一下
-      values.reverse()
+
+      let partList = []
+
+      if (this.beginPage !== "" && this.endPage !== "") {
+        let paramsData = this.getParameter("select")
+
+        paramsData.pageNo = this.beginPage
+        paramsData.excelPageSize = (this.endPage - this.beginPage + 1) * this.pageSize
+
+        let result = await this.apiRequest(paramsData)
+        partList = result.data.valueList
+      } else {
+        partList = this.tableList
+      }
+
+      console.log(partList)
 
       let data = []
-      for (let i = 0; i < this.tableList.length; i++) {
+      for (let i = 0; i < partList.length; i++) {
         let part = []
-        for (let j in this.tableList[i]) {
-          part.push(this.tableList[i][j])
+        for (let j in partList[i]) {
+          part.push(partList[i][j])
         }
         data.push(part)
       }
 
-      export_json_to_excel(values, data, "excel表名");
+      if (this.excelName === "") {
+        this.excelName = "默认名称"
+      }
+      export_json_to_excel(values, data, this.excelName);
+
+      this.dialogFormVisible1 = false
     },
   },
 
@@ -430,7 +429,15 @@ export default {
           this.fresh()
         }
       }
-    }
+    },
+
+    dialogFormVisible1: {
+      handler() {
+        this.beginPage = ""
+        this.endPage = ""
+        this.excelName = ""
+      }
+    },
   },
 
   mounted() {
@@ -438,6 +445,7 @@ export default {
     this.$bus.$on("del", this.del);
     this.$bus.$on("add", this.add);
     this.$bus.$on("fresh", this.fresh)
+    this.$bus.$on("excelData", this.getExcelData)
   },
 };
 </script>
