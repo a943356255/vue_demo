@@ -9,8 +9,7 @@ const requests = axios.create({
 // 请求拦截器：在发出请求前会进行拦截，可以进行一些操作
 requests.interceptors.request.use((config) => {
 
-    console.log("token=", store.state.demo.token);
-
+    // console.log("token=", store.state.demo.token);
     if (store.state.demo.token) {
         config.headers.token = store.state.demo.token
     }

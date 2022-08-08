@@ -51,7 +51,7 @@ export const asyncRouterMap = [
     {
         path: "/role_management",
         name: "role_management",
-        component: () => import("../pages/Add/index"),
+        component: () => import("../pages/RoleManagement/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin"],
@@ -69,7 +69,7 @@ export const asyncRouterMap = [
     {
         path: "/goods_management",
         name: "goods_management",
-        component: () => import("../pages/GoodsManagement/index"),
+        component: () => import("../pages/FileManagement/index"),
         meta: {
             // 普通管理员只能添加数据
             role: ["admin", "normal_editor"],

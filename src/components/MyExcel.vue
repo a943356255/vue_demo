@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-button type="warning" @click="dialogFormVisible = true">导出为excel</el-button>
-
     <el-dialog title="导出格式" :visible.sync="dialogFormVisible">
       <el-form :columnsName="this.columnsName">
         <el-form-item
@@ -41,7 +40,6 @@
         <el-button type="primary" @click="getExcel">确 定</el-button>
       </div>
     </el-dialog>
-
   </div>
 </template>
 
@@ -85,20 +83,14 @@ export default {
       }
 
       let result = this.getExcelData()
-      console.log(result)
 
       if (this.excelName === "") {
         this.excelName = "默认名称"
       }
-      // export_json_to_excel(values, data, this.excelName);
-
+      export_json_to_excel(values, data, this.excelName);
 
       this.dialogFormVisible = false
       this.excelName = ""
-    },
-
-    getData(data) {
-      console.log(data)
     },
   },
 

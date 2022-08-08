@@ -5,9 +5,11 @@ import vuex from "vuex";
 import VueRouter from "vue-router";
 import router from "./router/index";
 import store from "./store/index"
+import uploader from 'vue-simple-uploader'
 
 Vue.use(vuex);
 Vue.use(VueRouter);
+Vue.use(uploader);
 Vue.config.productionTip = false
 
 import {
