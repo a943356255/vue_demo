@@ -15,8 +15,9 @@ export const reqLogin = (value) => {
         url: "api/user/login",
         method: "POST",
         data: {
-            phone: value.phone,
-            password: value.password
+            username: value.phone,
+            password: value.password,
+            rememberMe: value.rememberMe
         }
     })
 }
