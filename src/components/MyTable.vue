@@ -286,7 +286,7 @@ export default {
               id: this.tableList[index].id,
             };
 
-            this.apiRequest(map).then((res) => {
+            this.apiRequest(map).then(() => {
               Message({
                 type: "success",
                 message: "删除成功!",
@@ -297,7 +297,7 @@ export default {
                 this.pageNo -= 1
               }
               this.fresh()
-            });
+            })
           })
           .catch(() => {
             Message({
@@ -415,7 +415,7 @@ export default {
     table: {
       immediate: true,
       deep: true,
-      async handler(newVal, oldVal) {
+      async handler() {
         let map = this.getParameter("select");
         let result = await this.apiRequest(map);
         this.tableList = result.data.valueList;
@@ -445,7 +445,7 @@ export default {
     this.$bus.$on("del", this.del);
     this.$bus.$on("add", this.add);
     this.$bus.$on("fresh", this.fresh)
-    this.$bus.$on("excelData", this.getExcelData)
+    this.$bus.$on("excelData")
   },
 };
 </script>
@@ -455,9 +455,9 @@ export default {
   margin-bottom: 10px;
 }
 
-.el-icon-arrow-down {
-  font-size: 12px;
-}
+/*.el-icon-arrow-down {*/
+/*  font-size: 12px;*/
+/*}*/
 
 .footer-div {
   width: 300px;
