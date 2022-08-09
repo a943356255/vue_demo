@@ -1,14 +1,17 @@
 <template>
   <div>
-    <uploader :options="options" class="uploader-example"
-              @file-complete="fileComplete" @complete="complete">
-      <uploader-unsupport></uploader-unsupport>
-      <uploader-drop>
-        <p>选择你要上传的文件</p>
-        <uploader-btn>select files</uploader-btn>
-      </uploader-drop>
-      <uploader-list></uploader-list>
-    </uploader>
+    <MyDialog>
+      <uploader :options="options" class="uploader-example"
+                @file-complete="fileComplete" @complete="complete">
+        <uploader-unsupport></uploader-unsupport>
+        <uploader-drop>
+          <p>选择你要上传的文件</p>
+          <uploader-btn>select files</uploader-btn>
+        </uploader-drop>
+        <uploader-list></uploader-list>
+      </uploader>
+    </MyDialog>
+
   </div>
 </template>
 

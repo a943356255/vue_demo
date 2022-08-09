@@ -77,9 +77,11 @@ import "./permission";
 import "./style/global.css";
 import MyTable from "@/components/MyTable";
 import MyExcel from "@/components/MyExcel";
+import MyDialog from "@/components/MyDialog";
 
 Vue.component(MyTable.name, MyTable);
 Vue.component(MyExcel.name, MyExcel);
+Vue.component(MyDialog.name, MyDialog);
 
 new Vue({
   render: h => h(App),
