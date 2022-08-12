@@ -12,11 +12,19 @@
       </uploader>
     </MyDialog>
 
+    <MyDialog
+        button-name="下载b站视频"
+        :value="this.value"
+        :title="title"
+        :apiRequest="apiRequest"
+    >
+    </MyDialog>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import requests from "@/api/requests";
 
 export default {
   name: "GoodsManagement",
@@ -27,13 +35,18 @@ export default {
         target: '/api/file/uploadFile',
         testChunks: false, //上传前判断块是否已经存在
         simultaneousUploads: 5, //并发数
-        chunkSize: 8 * 1024 * 1024 //块大小
+        chunkSize: 8 * 1024 * 1024, //块大小
       },
+      value: {
+        "url": "视频链接",
+        "filename": "要保存的视频名称",
+      },
+      title: "下载窗口",
     }
   },
 
   methods: {
-    fileComplete () {
+    fileComplete() {
       console.log('file complete', arguments)
       const file = arguments[0].file
       let url = '/api/file/mergeFile?filename=' + file.name + '&guid=' + arguments[0].uniqueIdentifier
@@ -48,6 +61,17 @@ export default {
     complete() {
       console.log('complete', arguments)
     },
+
+    apiRequest(value) {
+      return requests({
+        url: "/api/file/download",
+        method: "POST",
+        data: {
+          url: value.url,
+          filename: value.filename,
+        }
+      })
+    }
   }
 };
 </script>
