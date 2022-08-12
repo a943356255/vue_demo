@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MyDialog>
+    <MyDialog button-name="上传文件">
       <uploader :options="options" class="uploader-example"
                 @file-complete="fileComplete" @complete="complete">
         <uploader-unsupport></uploader-unsupport>

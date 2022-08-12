@@ -13,7 +13,6 @@
         action=""
         :on-change="handleChange"
         :on-remove="handleRemove"
-        :file-list="fileListUpload"
         :limit="limitValue"
         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
         :auto-upload="false"
@@ -59,7 +58,6 @@ export default {
       buttonName: "按钮名称",
       excelButtonName: "导入excel",
       excelData: [], //存放数据的数组
-      fileListUpload: [], //upload绑定的fileList
       fileTemp: "", //导入函数需要的File内容
       colData: [], //维护table列
       limitValue: 1

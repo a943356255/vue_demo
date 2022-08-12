@@ -30,7 +30,7 @@
           >
             <el-input v-model="excelName" autocomplete="off" placeholder="请输入导出excel的名称"/>
           </el-form-item>
-          <el-form-item label="起始页："  :label-width="formLabelWidth">
+          <el-form-item label="起始页：" :label-width="formLabelWidth">
             <el-select v-model="beginPage" placeholder="请选择要导出数据的起始页">
               <el-option
                   v-for="val in Math.ceil(this.dataSize / this.pageSize)"
@@ -41,7 +41,7 @@
           </el-form-item>
 
           <el-form-item label="尾页：" :label-width="formLabelWidth">
-            <el-select v-model="endPage" :placeholder="showMessage" >
+            <el-select v-model="endPage" :placeholder="showMessage">
               <el-option
                   v-for="val in Math.ceil(this.dataSize / this.pageSize)"
                   v-show="val >= beginPage && beginPage !== ''"
@@ -278,33 +278,31 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
         center: true,
-      })
-          .then(() => {
-            // 在这里发起请求删除数据
-            let map = this.getParameter("delete");
-            map.condition = {
-              id: this.tableList[index].id,
-            };
+      }).then(() => {
+        // 在这里发起请求删除数据
+        let map = this.getParameter("delete");
+        map.condition = {
+          id: this.tableList[index].id,
+        };
 
-            this.apiRequest(map).then(() => {
-              Message({
-                type: "success",
-                message: "删除成功!",
-              });
-
-              let num = this.dataSize % this.pageSize
-              if (this.pageNo === (Math.floor(this.dataSize / this.pageSize) + 1) && num === 1) {
-                this.pageNo -= 1
-              }
-              this.fresh()
-            })
-          })
-          .catch(() => {
-            Message({
-              type: "info",
-              message: "已取消删除",
-            });
+        this.apiRequest(map).then(() => {
+          Message({
+            type: "success",
+            message: "删除成功!",
           });
+
+          let num = this.dataSize % this.pageSize
+          if (this.pageNo === (Math.floor(this.dataSize / this.pageSize) + 1) && num === 1) {
+            this.pageNo -= 1
+          }
+          this.fresh()
+        })
+      }).catch(() => {
+        Message({
+          type: "info",
+          message: "已取消删除",
+        });
+      });
     },
 
     async submit() {
