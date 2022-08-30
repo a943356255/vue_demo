@@ -39,3 +39,10 @@ export const reqInsertController = (data) => {
         }
     })
 }
+
+export const reqGetComponents = () => {
+    return requests({
+        url: "api/user/getRouter",
+        method: "POST"
+    })
+}

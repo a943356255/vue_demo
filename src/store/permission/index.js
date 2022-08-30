@@ -1,4 +1,5 @@
-import { asyncRouterMap, constantRouterMap } from "@/router";
+import {asyncRouterMap, constantRouterMap} from "@/router";
+import {reqGetComponents} from "@/api";
 
 // roles是用户所拥有的权限，route是路由，meta属性包含了能访问它的权限
 function hasPermission(roles, route) {
@@ -30,7 +31,32 @@ const permission = {
         }
     },
     actions: {
-        async GenerateRoutes({ commit }, data) {
+        async GenerateRoutes({commit}, data) {
+            // 查询用户动态添加的路由
+            let result = await reqGetComponents();
+            console.log(result);
+            let routerList = result.data.data
+            for (let i = 0; i < routerList.length; i++) {
+                let str = "Test/index"
+                let selectRouter = {
+                    path: routerList[i].path,
+                    name: routerList[i].name,
+                    component: () => import(`../../pages/${str}`),
+                    meta: routerList[i].meta
+                }
+                asyncRouterMap.push(selectRouter)
+            }
+
+            // let obj = {
+            //     path: "/test",
+            //     name: "test",
+            //     component: () => import('../../pages/Test/index'),
+            //     meta: {
+            //         roles: ["admin"]
+            //     },
+            // }
+            // asyncRouterMap.push(obj);
+
             // roles应该是请求到的用户拥有的权限
             const roles = data.roles;
             // 过滤完成后返回一个存有用户可以访问的路由数组

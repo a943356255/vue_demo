@@ -1,12 +1,12 @@
 <template>
   <div>
-    <MyDialog
-        :buttonName="buttonName"
-        :title="title"
-        :value="value"
-        :apiRequest="apiRequest"
-    >
-    </MyDialog>
+<!--    <MyDialog-->
+<!--        :buttonName="buttonName"-->
+<!--        :title="title"-->
+<!--        :value="value"-->
+<!--        :apiRequest="apiRequest"-->
+<!--    >-->
+<!--    </MyDialog>-->
 
     <el-upload
         class="upload-demo"
@@ -37,6 +37,14 @@
       </el-table-column>
     </el-table>
 
+    <MyDialog
+        buttonName="添加页面"
+        title="输入路由信息"
+        :value="routerMes"
+        :apiRequest="insertRouter"
+    >
+
+    </MyDialog>
   </div>
 </template>
 
@@ -49,6 +57,14 @@ export default {
 
   data() {
     return {
+      routerMes: {
+        "name": "路由的name",
+        "path": "路由的path",
+        "component": "具体组件",
+        "componentPath": "路由的路径",
+        "meta": "角色，有多个以逗号隔开"
+      },
+
       value: {
         "key1": "第一行",
         "key2": "第二行",
@@ -67,7 +83,7 @@ export default {
   methods: {
     apiRequest(value) {
       return requests({
-        url: "/api/user/getRoles",
+        url: "api/user/getRoles",
         method: "POST",
         data: {
           result: value
@@ -141,6 +157,29 @@ export default {
         reader.readAsBinaryString(f);
       }
     },
+
+    async insertRouter(data) {
+      console.log(data)
+      let result = await this.apiInsertRouter(data)
+      console.log(result)
+    },
+
+    getMeta(meta) {
+      return meta.split(",")
+    },
+
+    apiInsertRouter(data) {
+      return requests({
+        url: "api/user/insertRouter",
+        method: "POST",
+        data: {
+          path: data.path,
+          name: data.name,
+          component: data.component,
+          meta: {roles: this.getMeta(data.meta)}
+        }
+      })
+    }
   }
 };
 </script>
