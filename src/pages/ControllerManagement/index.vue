@@ -44,7 +44,6 @@
 </template>
 
 <script>
-
 import {reqGetRole, reqInsertController} from "@/api";
 
 export default {
@@ -58,6 +57,17 @@ export default {
       },
       conditions: {
         // id: "1",
+        // and: {
+        //   '=': {
+        //     role: 'admin'
+        //   },
+        //   '!=': {
+        //     id: '1'
+        //   }
+        // },
+        // or: {
+        //
+        // }
       },
       columnsName: {
         id: "主键",
